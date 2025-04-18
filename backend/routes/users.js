@@ -20,6 +20,7 @@ router.get("/allUsers", (req, res) => {
   })
 })
 
+
 //// ROUTE POST REGISTER : route pour créer un nouvel utilisateur
 router.post('/register', async (req, res) => {
   try {
