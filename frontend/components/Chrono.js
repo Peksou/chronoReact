@@ -6,8 +6,8 @@ export default function Chrono() {
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const intervalRef = useRef(null);
-    const targetSeconds = 1; // 1 seconde pour le test
-    // const targetSeconds = 6 * 3600; // 6 heures
+    // const targetSeconds = 1; // 1 seconde pour le test
+    const targetSeconds = 6 * 3600; // 6 heures
 
     useEffect(() => {
         if (isRunning) {
