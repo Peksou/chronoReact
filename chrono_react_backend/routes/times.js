@@ -1,9 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const Time = require('../models/Times');
+const Time = require('../models/times');
 const User = require('../models/users');
-const { checkBody } = require('../modules/checkBody');
-const { checkToken } = require('../modules/checkToken');
 
 // -- POST - CREER UN TEMPS -- //
 router.post('/', async (req, res) => {
