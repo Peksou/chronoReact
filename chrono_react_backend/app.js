@@ -25,4 +25,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/times', timesRouter);
 
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
 module.exports = app;
