@@ -60,6 +60,7 @@ router.post('/register', async (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: hashedPassword,
+      times: [],
     });
 
     // Sauvegarde en base de données
