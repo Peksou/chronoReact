@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/users');
-const { checkBody } = require('../modules/checkBody');
+const { checkBody } = require('../modules/checkbody');
 
 /* GET TEST users listing. */
 router.get('/', function (req, res, next) {
