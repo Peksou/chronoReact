@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import styles from '../styles/Chrono.module.css';
+// import { set } from 'mongoose';
 
 export default function Chrono() {
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -8,13 +9,15 @@ export default function Chrono() {
     const [targetMinutes, setTargetMinutes] = useState(60) // objectif temps définit par l'utilisateur
     const [pendingTarget, setPendingTarget] = useState(targetMinutes); // pour gérer les changements d'objectif en cours de chrono
     const targetSeconds = targetMinutes * 60;
-    const intervalRef = useRef(null);
-    const audioRef = useRef(null); // Ref pour gérer l'audio
     const firstTarget = 1 //Math.floor(targetSeconds/4) // temps 1er checkpoint 
     const secondTarget = Math.floor(targetSeconds / 4); // temps 1er checkpoint
     const miTarget = Math.floor(targetSeconds / 2); // temps mi parcours 2e checkpoint 
     const lastTarget = Math.floor(3 * (targetSeconds / 4)); // temps dernière heure dernier checkpoint
     const progressPercent = Math.min((elapsedSeconds / targetSeconds) * 100, 100); // Pourcentage de progression
+    const intervalRef = useRef(null);
+    const audioRef = useRef(null); // Ref pour gérer l'audio
+    const totalTimeRef = useRef(0); // Ref pour stocker le temps total écoulé
+    const [displayTotalTime, setDisplayTotalTime] = useState(0); // État pour afficher le temps total
 
     // Gestion du chrono
     useEffect(() => {
@@ -42,9 +45,12 @@ export default function Chrono() {
         return () => clearInterval(intervalRef.current);
     }, [isRunning]);
 
+    // Remise à zéro du chrono
     const handleReset = () => {
         setElapsedSeconds(0);
         setIsRunning(false);
+        totalTimeRef.current = 0;
+
 
         // Arrêter et supprimer complètement l'audio en cours
         if (audioRef.current) {
@@ -95,10 +101,24 @@ export default function Chrono() {
         }
     }, [elapsedSeconds]);
 
+    // Compteur temps total écoulé (même en pause ou reset)
+    useEffect(() => {
+        let interval;
+
+        if (isRunning) {
+            interval = setInterval(() => {
+                totalTimeRef.current += 1;
+                setDisplayTotalTime((prev) => prev + 1);
+            }, 1000)
+        }
+        return () => clearInterval(interval);
+    }, [isRunning]);
+
 
     // animation objectif atteint 
     useEffect(() => {
         if (elapsedSeconds === targetSeconds) {
+            setIsRunning(false);
             confetti({
                 particleCount: 1500,
                 startVelocity: 30,
@@ -257,10 +277,9 @@ export default function Chrono() {
                     </button>
                 </form>
 
-
+                <p>🧮 Temps total de travail effectif : {formatTime(displayTotalTime)}</p>
 
             </section>
-
 
 
         </main >
