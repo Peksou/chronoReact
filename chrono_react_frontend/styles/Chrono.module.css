@@ -68,3 +68,133 @@
     background: linear-gradient(90deg, #8ee8a3, #11cb11);
     transition: width 1s ease;
 }
+
+/* Section Configuration */
+.configSection {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  background-color: #f4f8ff;
+}
+
+.configSection h2 {
+  margin-bottom: 1rem;
+}
+
+.quickSelect p,
+.advancedForm p {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.buttonsGroup {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+}
+
+.buttonsGroup button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #0070f3;
+  background-color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+.buttonsGroup button:hover {
+  background-color: #0070f3;
+  color: white;
+}
+
+.advancedForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.timeInputs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.timeInputs label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+}
+
+.timeInputs input {
+  padding: 0.4rem;
+  font-size: 1rem;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  width: 80px;
+}
+
+
+.quickSelectBtn {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.quickSelectBtn.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #0056b3;
+}
+
+/* Bouton de validation */
+.validateQuickBtn {
+  padding: 0.4rem 1rem;
+  margin-bottom: 2.5rem; /* espace avec la section suivante */
+  font-size: 1rem;
+  background-color: #bcefc9;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.validateQuickBtn:hover {
+  background-color: #218838;
+  color: white;
+}
+
+.validateBtn {
+  padding: 0.4rem 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  background-color: #bcefc9;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+    /* ✅ Fix largeur max */
+  max-width: 300px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  text-align: center;
+}
+
+.validateBtn:hover {
+  background-color: #218838;
+  color: white;
+}
+
+

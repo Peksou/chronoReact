@@ -6,7 +6,7 @@ function Index() {
     <div>
       <Head>
         <title>⏱️ Chronomètre Coding</title>
-        <likn rel="icon" href="/favion.ico" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       
       <Chrono />

@@ -5,10 +5,11 @@ import styles from '../styles/Chrono.module.css';
 export default function Chrono() {
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
+    const [targetMinutes, setTargetMinutes] = useState(60) // objectif temps définit par l'utilisateur
+    const [pendingTarget, setPendingTarget] = useState(targetMinutes); // pour gérer les changements d'objectif en cours de chrono
+    const targetSeconds = targetMinutes * 60;
     const intervalRef = useRef(null);
     const audioRef = useRef(null); // Ref pour gérer l'audio
-    // const targetSeconds = 30; // pour le test
-    const targetSeconds = 1 * 3600; // objetcif temps : 5 heures /jours
     const firstTarget = 1 //Math.floor(targetSeconds/4) // temps 1er checkpoint 
     const secondTarget = Math.floor(targetSeconds / 4); // temps 1er checkpoint
     const miTarget = Math.floor(targetSeconds / 2); // temps mi parcours 2e checkpoint 
@@ -123,48 +124,145 @@ export default function Chrono() {
 
     // --- JSX --- //
     return (
-        <div className={styles.container}>
-            <h1>⏱️ Chronomètre de Coding ⏱️</h1>
-            <div className={styles.progressBarContainer}>
-                <div className={styles.progressBar} style={{ width: `${progressPercent}%` }}></div>
-            </div>
-            <div className={styles.chrono}>{formatTime(elapsedSeconds)}</div>
-            <div className={styles.buttons}>
-                <div className={styles.startPause} >
+
+        <main className={styles.container}>
+
+            {/* Chronomètre */}
+            <section>
+                <h1>⏱️ Chronomètre de Motivation ⏱️</h1>
+                <div className={styles.progressBarContainer}>
+                    <div className={styles.progressBar} style={{ width: `${progressPercent}%` }}></div>
+                </div>
+                <div className={styles.chrono}>{formatTime(elapsedSeconds)}</div>
+                <p>🎯 Objectif actuel : {Math.floor(targetMinutes / 60)}h {Math.floor(targetMinutes % 60)}min {Math.floor(targetSeconds % 60)}s</p>
+
+                <div className={styles.buttons}>
+                    <div className={styles.startPause} >
+                        <button
+                            aria-label={isRunning ? 'Mettre en pause le chronomètre' : elapsedSeconds > 0 ? 'Reprendre le chronomètre' : 'Démarrer le chronomètre'} className={styles.startPauseBtn}
+                            onClick={() => setIsRunning(!isRunning)}
+                        >
+                            {isRunning ? 'Pause' : elapsedSeconds > 0 ? 'Reprendre' : 'Démarrer'}
+                        </button>
+                    </div>
+                    <div className={styles.reset} >
+                        <button aria-label='Remettre le chronomètre à zéro' className={styles.resetBtn} onClick={handleReset} >Remise à zéro</button>
+                    </div>
+                </div>
+            </section>
+            <section>
+
+                <div aria-live='polite' role='status'>
+                    {isRunning && (
+                        <p className={styles.inProgress}>Chronomètre en cours...</p>
+                    )}
+                    {!isRunning && elapsedSeconds > 0 && elapsedSeconds < targetSeconds && (
+                        <p className={styles.inProgress}>Chronomètre en pause...</p>
+                    )}
+                    {elapsedSeconds >= firstTarget && elapsedSeconds < miTarget && (
+                        <p className={styles.success} > Lets gooooo !!!!</p>
+                    )}
+                    {elapsedSeconds >= miTarget && elapsedSeconds < secondTarget && (
+                        <p className={styles.success} > On avance bien là ! !</p>
+                    )}
+                    {elapsedSeconds >= miTarget && elapsedSeconds < lastTarget && (
+                        <p className={styles.success} > Encore une petite moitiée !</p>
+                    )}
+                    {elapsedSeconds >= lastTarget && elapsedSeconds < targetSeconds && (
+                        <p className={styles.success} > Allé dernière ligne droite, t'y es presque !</p>
+                    )}
+                </div>
+                <div aria-live='polite' role='alert'>
+                    {elapsedSeconds >= targetSeconds && (
+                        <p className={styles.success} >🎉 Bravoooo, objectif atteint ! 🎉</p>
+                    )}
+                </div>
+            </section>
+
+            <section className={styles.configSection}>
+                <h2>Paramétrer votre objectif</h2>
+
+                {/* Sélection rapide */}
+                <div className={styles.quickSelect}>
+                    <p>⏳ Choisissez une durée :</p>
+                    <div className={styles.buttonsGroup}>
+                        {[5, 20, 30, 60, 120].map((min) => (
+                            <button
+                                key={min}
+                                type="button"
+                                onClick={() => setPendingTarget(min)}
+                                className={`${styles.quickSelectBtn} ${pendingTarget === min ? styles.active : ''}`}
+                            >
+                                {min >= 60 ? `${Math.floor(min / 60)}h${min % 60 !== 0 ? min % 60 + 'min' : ''}` : `${min}min`}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Validation rapide */}
                     <button
-                        className={styles.startPauseBtn}
-                        onClick={() => setIsRunning(!isRunning)}
+                        className={styles.validateQuickBtn}
+                        onClick={() => {
+                            setTargetMinutes(pendingTarget);
+                            setElapsedSeconds(0);
+                            setIsRunning(false);
+                        }}
                     >
-                        {isRunning ? 'Pause' : elapsedSeconds > 0 ? 'Reprendre' : 'Démarrer'}
+                        ✅ Valider la durée prédéfinie
                     </button>
                 </div>
-                <div className={styles.reset} >
-                    <button className={styles.resetBtn} onClick={handleReset} >Remise à zéro</button>
-                </div>
 
-            </div>
-            {isRunning && (
-                <p className={styles.inProgress}>Chronomètre en cours...</p>
-            )}
-            {!isRunning && elapsedSeconds > 0 && elapsedSeconds < targetSeconds && (
-                <p className={styles.inProgress}>Chronomètre en pause...</p>
-            )}
-            {elapsedSeconds >= firstTarget && elapsedSeconds < miTarget && (
-                <p className={styles.success} > Lets gooooo !!!!</p>
-            )}
-            {elapsedSeconds >= miTarget && elapsedSeconds < secondTarget && (
-                <p className={styles.success} > On avance bien là ! !</p>
-            )}
-            {elapsedSeconds >= miTarget && elapsedSeconds < lastTarget && (
-                <p className={styles.success} > Encore une petite moitiée !</p>
-            )}
-            {elapsedSeconds >= lastTarget && elapsedSeconds < targetSeconds && (
-                <p className={styles.success} > Allé dernière ligne droite, t'y es presque !</p>
-            )}
-            {elapsedSeconds >= targetSeconds && (
-                <p className={styles.success} >🎉 Bravoooo, objectif atteint ! 🎉</p>
-            )}
+                {/* Formulaire personnalisé */}
+                <form
+                    className={styles.advancedForm}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        const hours = parseInt(e.target.hours.value) || 0;
+                        const minutes = parseInt(e.target.minutes.value) || 0;
+                        const seconds = parseInt(e.target.seconds.value) || 0;
+                        const total = hours * 3600 + minutes * 60 + seconds;
 
-        </div>
+                        if (total > 0) {
+                            setTargetMinutes(total / 60);
+                            setElapsedSeconds(0);
+                            setIsRunning(false);
+                        }
+                    }}
+                >
+                    <p>⏱️ Ou personnalisez la :</p>
+
+                    <div className={styles.timeInputs}>
+                        <label>
+                            Heures :
+                            <input type="number" name="hours" min="0" defaultValue="0" />
+                        </label>
+                        <label>
+                            Minutes :
+                            <input type="number" name="minutes" min="0" max="59" defaultValue="0" />
+                        </label>
+                        <label>
+                            Secondes :
+                            <input type="number" name="seconds" min="0" max="59" defaultValue="0" />
+                        </label>
+                    </div>
+                    {/* Validation personnalisée */}
+                    <button
+                        className={styles.validateBtn}
+                        onClick={() => {
+                            setTargetMinutes(pendingTarget);
+                            setElapsedSeconds(0);
+                            setIsRunning(false);
+                        }}
+                    >
+                        ✅ Valider la durée personalisée
+                    </button>
+                </form>
+
+
+
+            </section>
+
+
+
+        </main >
     )
 }
