@@ -85,9 +85,9 @@ export default function Chrono() {
                 audioRef.current.pause();
                 audioRef.current.currentTime = 0;
             }
-            audioRef.current = new Audio('/Dont_give_up.mp3');
+            audioRef.current = new Audio('/Morning_mindset.mp3');
             audioRef.current.play().catch(error => {
-                console.log("Erreur de lecture de l'audio Dont_give_up", error);
+                console.log("Erreur de lecture de l'audio Morning_mindset", error);
             });
         } else if (elapsedSeconds === lastTarget) {
             if (audioRef.current) {
@@ -120,17 +120,22 @@ export default function Chrono() {
         if (elapsedSeconds === targetSeconds) {
             setIsRunning(false);
             confetti({
-                particleCount: 1500,
+                particleCount: 2000,
                 startVelocity: 30,
                 spread: 360,
                 origin: { y: 0.5 },
                 drift: 0.4,
-                gravity: 0.2,
+                gravity: 0.5,
             })
-            const audio = new Audio('/success.mp3');
+            const audio = new Audio('/Applaudissement.mp3');
+            audio.volume = 0.4; 
+            const audioSteve = new Audio('/Steve_Harvey_Success.mp3');
             audio.play().catch(error => {
-                console.error("erreur de lecture de l'audio success", error);
-            })
+                console.error("erreur de lecture de l'audio Applaudissement", error);
+            });
+            audioSteve.play().catch(error => {
+                console.error("erreur de lecture de l'audio Steve Harvey", error);
+            });
         }
     }, [elapsedSeconds]);
 
